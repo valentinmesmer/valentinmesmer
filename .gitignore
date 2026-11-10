@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Secrets and local config
+.env
+*.env
+
+# Local test output
+tmp/
+*.png
+!assets/*.png

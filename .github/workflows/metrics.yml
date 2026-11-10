@@ -1,0 +1,27 @@
+name: Metrics
+on:
+  schedule: [{ cron: "0 3 * * 1" }]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  loc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: tokei
+
+      - name: Count lines of code and generate SVG
+        env:
+          GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+        run: python3 scripts/loc.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add github-metrics.svg
+          git diff --staged --quiet || (git commit -m "Update github-metrics.svg [skip ci]" && git push)
